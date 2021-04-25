@@ -52,7 +52,7 @@ export function UserIdentification(){
               <View style={styles.form}>
                 <View style={styles.header}>
                     <Text style={styles.emoji}>
-                    { isFilled ? '😊' : '😎'}
+                    { isFilled ? '😊' : '😎'} 
                     </Text>
                 </View>
                     <Text style={styles.title}>
@@ -85,7 +85,7 @@ export function UserIdentification(){
      )   
 }
 
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
 
     container:{
         flex: 1,
