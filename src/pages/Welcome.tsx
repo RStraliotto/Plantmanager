@@ -12,9 +12,19 @@ import {Entypo} from '@expo/vector-icons';
 import wateringImg from '../assets/watering.png';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { useNavigation } from '@react-navigation/core';
 
 
 export function Welcome(){
+
+            const navigation = useNavigation();
+            
+            //função do botão incial
+            function handleStart(){
+                //direciona para tela user identificatio
+                navigation.navigate('UserIdentification');
+            }
+
     return(
             <SafeAreaView style={styles.container}>
                
@@ -43,12 +53,18 @@ export function Welcome(){
 
                                 <TouchableOpacity 
                                 style={styles.button} 
-                                activeOpacity={0.7} >
+                                activeOpacity={0.7}                             
+                                //ao clicar chama a funão handlestart
+                                onPress={handleStart}
+                                >
+                                
                                 
                                 
                                 <Entypo 
                                 name="chevron-thin-right"
                                 style={styles.buttonicons}
+                                
+
                                 />
 
                             
