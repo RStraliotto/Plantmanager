@@ -46,7 +46,7 @@ export function UserIdentification(){
             
     //função do botão incial
     function handleSubmit(){
-        //direciona para tela user identificatio
+        //direciona para tela user identification
         navigation.navigate('Confirmantion');
     }
 
