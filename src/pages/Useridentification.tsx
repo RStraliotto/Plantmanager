@@ -9,12 +9,13 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Platform,
-    Keyboard
+    Keyboard,
+    Alert,
 
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button}  from '../components/Button';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
@@ -45,7 +46,15 @@ export function UserIdentification(){
     }
             
     //função do botão incial
-    function handleSubmit(){
+    async function handleSubmit(){
+
+        if(!name)
+        //validado se existe o preenchimento 
+        return Alert.alert('Me diz como posso chamar você 😢');
+        //salvando o nome do usuário
+       await AsyncStorage.setItem('@plantmanager:user', name);
+
+
         //direciona para tela user identification
         navigation.navigate('Confirmantion');
     }
@@ -94,7 +103,7 @@ export function UserIdentification(){
 
                 </View>     
                 </View> 
-            </TouchableWithoutFeedback> />   
+            </TouchableWithoutFeedback>   
             </KeyboardAvoidingView>     
         </SafeAreaView>
 
