@@ -10,10 +10,13 @@ ActivityIndicator,
 import { EnviromentButton } from '../components/EnviromentButton';
 import {Header} from '../components/Header';
 import { PlantCardPrimary } from '../components/PlantCardPrimary';
+import { useNavigation } from '@react-navigation/core';
+
 import { Load } from '../components/Load';
 import api from '../services/api';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+
 
 interface EnviromentProps {
     key: string;
@@ -21,8 +24,9 @@ interface EnviromentProps {
 }
 
 interface PlantsProps {
+    environments: any;
     id: string;
-    nome: string;
+    name: string;
     about: string;
     water_tips: string;
     photo: string;
@@ -34,27 +38,30 @@ interface PlantsProps {
 }
 
 export function PlantSelect(){
-
+    // vetor da interface plantProps
     const [enviroments, setEnvirtoments] = useState<EnviromentProps[]>([]);
     const [plants, setPlants] = useState<PlantsProps[]>([]);
     const [filteredPlants, setFilteredPlants] = useState<PlantsProps[]>([]);
-    const [enviromentsSelected, setEnvimentSelected] = useState('all');
-    //mudar para true para funcionar
-    const [loading, setloading]=useState(false);
-
+    const [enviromentSelected, setEnvimentSelected] = useState('all');
+    //img de loding enquanto carrega os dados da api
+    const [loading, setloading]=useState(true);
+    //navegação
+    const navigation = useNavigation();
     const [page, setPage]= useState(1);
     const [loadingMore, setLoadingMore]= useState(true);
   
 
 
-    function handleEnviromentSelected(enviroments: string){
-        setEnvimentSelected(enviroments);
+    function handleEnviromentSelected(environment: string){
+        setEnvimentSelected(environment);
         // apresenta todos
-        if(enviroments == 'all')
+        if(environment == 'all')
+        
         return setFilteredPlants(plants);
+        
         // apresenta por cat dos menus 
         const filtered = plants.filter(plant =>
-            plant.enviroments.includes(enviroments)
+            plant.environments.includes(environment)
             );
     
         setFilteredPlants(filtered);
@@ -94,15 +101,22 @@ export function PlantSelect(){
         fetchPlants();
     }
 
+    // chamada da interace navigation para navegação
+    function handlePlantSelect(plant:PlantsProps) {
+        
+        // savando e passando os dados para outra tela por rota
+        navigation.navigate('PlantSave', {plant});
+    }
 
        useEffect(() => {
 
         async function fetchEnviroment(){
             const { data } = await api
-            .get('plants_enviroments?_sort=title&_order=asc');
+            // plants_environments api arquivo server.json 
+            .get('plants_environments?_sort=title&_order=asc');
             setEnvirtoments([{
-                    key:'all',
-                    title:'all',
+                    key: 'all',
+                    title: 'Todos',
             },
             ...data
             ]);
@@ -137,11 +151,12 @@ export function PlantSelect(){
                 <View>
                 <FlatList
                      data={enviroments} 
-                     keyExtractor={(item) => String(item.key)}
+                     keyExtractor={(item) => (item.key)}
                      renderItem={({item}) => (
-                     <EnviromentButton
+                    
+                    <EnviromentButton
                      title={item.title}
-                     active={item.key == enviromentsSelected}
+                     active={item.key == enviromentSelected}
                      onPress={() => handleEnviromentSelected(item.key) }
                                                                
                      />
@@ -160,7 +175,10 @@ export function PlantSelect(){
                      data={filteredPlants}
                      keyExtractor={(item) => String(item.id)}
                      renderItem={({item}) => (
-                        <PlantCardPrimary data ={item} />
+                        <PlantCardPrimary 
+                          data={item} 
+                          onPress={() => handlePlantSelect(item)}  
+                        />
                      )}
                      showsVerticalScrollIndicator={false}
                      numColumns={2}
